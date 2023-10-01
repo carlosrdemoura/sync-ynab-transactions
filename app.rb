@@ -27,7 +27,7 @@ class SyncYnabApp < Sinatra::Base
 
     ynab = YNAB::API.new(ENV['YNAB_API_KEY'])
     budget_id = ENV['YNAB_BUDGET_ID']
-    account_id = ENV['NUCONTA_ACCOUNT_ID']
+    account_id = ENV['ACCOUNT_ID']
 
     transaction_data = {
       transaction: {
@@ -42,7 +42,7 @@ class SyncYnabApp < Sinatra::Base
 
     begin
       ynab.transactions.create_transaction(budget_id, transaction_data)
-      halt 201, { ok: true, message: 'Transação criada no YNAB - Compra no débito.' }.to_json
+      halt 201, { ok: true, message: 'Transação criada no YNAB.' }.to_json
     rescue => e
       logger.info "ERROR: id=#{e.id}; name=#{e.name}; detail: #{e.detail}"
       halt 400, { ok: false, message: "Erro: #{e.message}" }.to_json
