@@ -18,10 +18,6 @@ class SyncYnabApp < Sinatra::Base
 
     notification_text = params[:notification_text]
 
-    unless notification_text.include? "Sua compra foi aprovada"
-      halt 400, { ok: false, message: "Invalid payload." }.to_json
-    end
-
     amount = notification_text.scan(/[0-9]+,[0-9]{2}/)[0].gsub(',','.').to_f
     payee = notification_text.scan(/(?<=em)(.*\n?)/)[0][0].strip.chomp('.')
 
