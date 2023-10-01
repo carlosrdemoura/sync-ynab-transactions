@@ -2,16 +2,19 @@ require 'awesome_print'
 require 'sinatra/base'
 require 'rack/contrib'
 require 'ynab'
+require 'logger'
+require 'sinatra/custom_logger'
 
 class SyncYnabApp < Sinatra::Base
   use Rack::JSONBodyParser
+  set :logger, Logger.new(STDOUT)
 
   before do
     content_type :json
   end
 
   post "/transactions" do
-    ap params
+    logger.info params
 
     notification_text = params[:notification_text]
 
@@ -37,7 +40,7 @@ class SyncYnabApp < Sinatra::Base
       ynab.transactions.create_transaction(budget_id, transaction_data)
       halt 201, { ok: true, message: 'Transação criada no YNAB.' }.to_json
     rescue => e
-      ap "ERROR: id=#{e.id}; name=#{e.name}; detail: #{e.detail}"
+      logger.info "ERROR: id=#{e.id}; name=#{e.name}; detail: #{e.detail}"
       halt 400, { ok: false, message: "Erro: #{e.message}" }.to_json
     end
 
