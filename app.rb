@@ -49,4 +49,8 @@ class SyncYnabApp < Sinatra::Base
     end
 
   end
+
+  get '/healthcheck' do
+    halt 200
+  end
 end
